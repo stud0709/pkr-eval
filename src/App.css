@@ -1,38 +1,64 @@
-.App {
+.app {
+  font-size: 2vmin;
+}
+
+h1 {
+  font-size: 4vmin;
+}
+
+.main_tbl {
+  width: 100%;
+}
+
+.card_suit_top {
+  font-size: 2vmin;
+  text-align: right;
+  padding-bottom: 0vmin;
+}
+
+.card_suit_bottom {
+  font-size: 2vmin;
+  text-align: left;
+  padding-top: 0vmin;
+}
+
+.card_value {
+  font-size: 3vmin;
   text-align: center;
+  padding: 0vmin;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.card {
+  width: 6vmin;
+  border: 1px solid black;
+  border-radius: .3vmin;
+  padding: .1vmin;
+  /*background-color: gray;*/
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.fold{
+  opacity: 33%;
+} 
+
+.hidden {
+  visibility: hidden;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.chances {
+  width: 6vmin;
+  vertical-align: bottom;
+}
+
+.dealer_button {
+  width: 1.5vw;
+  height: 1.5vw;
+  border-radius: 50%;
+  border: .2vw dotted white;
+  background-color: plum;
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1vw;
+  box-shadow: 0vw 0vw .5vw gray;
 }
