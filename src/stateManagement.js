@@ -12,6 +12,8 @@ const TYPE_CMD = 'cmd',
     CMD_SIT_IN = '+';
 
 const stateReducer = (state, action) => {
+    console.log(JSON.stringify(action));
+
     switch (action.type) {
         case TYPE_CMD:
             switch (action.params) {
@@ -21,27 +23,28 @@ const stateReducer = (state, action) => {
                 default:
                     //pos. 1 is player number
                     let playerNo = action.params[0];
-                    let command = action.params.slice(1);
-                    switch (command) {
+                    let commandArr = action.params.slice(1);
+
+                    switch (commandArr[0]) {
                         case CMD_FOLD:
-                            fold(state, playerNo);
+                            fold(state, playerNo - 1, commandArr[1]);
                             break;
                         case CMD_DEALER:
-                            dealer(state, playerNo);
+                            dealer(state, playerNo - 1);
                             break;
                         case CMD_RESET_SINGLE:
-                            reset(state, playerNo);
+                            reset(state, playerNo - 1);
                             break;
                         case CMD_SIT_OUT:
                         case CMD_SIT_IN:
-                            setActive(state, playerNo, command === '+');
+                            setActive(state, playerNo - 1, commandArr[0] === '+');
                             break;
                         default:
                             //check if it is a card assignment
-                            if (/^([23456789tjqka][dchs]){2}/.test()) {
-                                setCards(state, playerNo, command);
+                            if (/^([23456789tjqka][dchs]){2}/.test(action.params.substring(1))) {
+                                setCards(state, playerNo - 1, action.params.substring(1));
                             } else {
-                                throw new Error(`invalid action: ${action}`);
+                                throw new Error(`invalid action: ${JSON.stringify(action)}`);
                             }
                     }
             }
@@ -49,10 +52,21 @@ const stateReducer = (state, action) => {
         case TYPE_GUI:
             break;
         default:
-            throw new Error(`invalid action: ${action}`);
+            throw new Error(`invalid action: ${JSON.stringify(action)}`);
 
     }
+
+    console.log(JSON.stringify(state));
+
+    return Object.assign({}, state);
 };
+
+
+const cmdActive = (playerNo, value) => { return { type: TYPE_CMD, params: [playerNo + 1, value ? CMD_SIT_IN : CMD_SIT_OUT] } };
+const cmdResetSingle = (playerNo) => { return { type: TYPE_CMD, params: [playerNo + 1, CMD_RESET_SINGLE] } };
+const cmdFold = (playerNo, value) => { return { type: TYPE_CMD, params: [playerNo + 1, CMD_FOLD] } };
+const cmdDealer = (playerNo) => { return { type: TYPE_CMD, params: [playerNo + 1, CMD_DEALER] } };
+const cmdUserEntry = (entry) => { return { type: TYPE_CMD, params: entry } };
 
 const reset = (state, playerNo) => {
     state.players.forEach((p, i) => {
@@ -63,21 +77,22 @@ const reset = (state, playerNo) => {
 };
 
 const fold = (state, playerNo) => {
-    state.players[playerNo].fold = 1;
+    state.players[playerNo].fold = !state.players[playerNo].fold;
 };
 
 const dealer = (state, playerNo) => {
-    state.players[playerNo].dealer = 1;
+    state.players.forEach((p, i) => p.dealer = i === Number(playerNo));
 };
 
 const setActive = (state, playerNo, value) => {
     state.players[playerNo].active = value;
+    if (!state.players[playerNo].fold) fold(state, playerNo);
 };
 
 const setCards = (state, playerNo, command) => {
-    let vs1 = [...command].slice(0, 2);
-    let vs2 = [...command].slice(2, 4);
+    let vs1 = command.substring(0, 2);
+    let vs2 = command.substring(2, 4);
     state.players[playerNo].cards = [Card(vs1), Card(vs2)];
 };
 
-export { unknownHand, stateReducer };
+export { unknownHand, stateReducer, cmdActive, cmdResetSingle, cmdFold, cmdDealer, cmdUserEntry };

@@ -6,9 +6,18 @@ h1 {
   font-size: 4vmin;
 }
 
+/*
 .main_tbl {
   width: 100%;
-}
+}*/
+
+.usage td{
+  vertical-align: top;
+} 
+
+.usage2{
+  vertical-align: bottom !important;
+} 
 
 .card_suit_top {
   font-size: 2vmin;
@@ -33,15 +42,31 @@ h1 {
   border: 1px solid black;
   border-radius: .3vmin;
   padding: .1vmin;
-  /*background-color: gray;*/
 }
 
-.fold{
+.fold {
   opacity: 33%;
-} 
+}
 
 .hidden {
   visibility: hidden;
+}
+
+.dealer_button_off {
+  visibility: visible !important;
+  width: 1.5vw;
+  height: 1.5vw;
+  border-radius: 50%;
+  border: .2vw dotted white;
+  background-color: lightgray;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1vw;
+  box-shadow: 0vw 0vw .5vw gray;
+  opacity: 25%;
+  cursor: default;
 }
 
 .chances {
@@ -49,7 +74,7 @@ h1 {
   vertical-align: bottom;
 }
 
-.dealer_button {
+.dealer_button, .dealer_button_off:hover {
   width: 1.5vw;
   height: 1.5vw;
   border-radius: 50%;
@@ -61,4 +86,22 @@ h1 {
   align-items: center;
   font-size: 1.1vw;
   box-shadow: 0vw 0vw .5vw gray;
+  cursor: default;
 }
+
+.dealer_button_off:hover{
+  opacity: 50%;
+} 
+
+.toolbar_button:hover {
+  text-shadow: 0vw 0vw .5vw black;
+  cursor: default;
+}
+
+.toolbar_button, .toolbar_button:hover{
+  font-size: 3vmin;
+} 
+
+abbr[title]{
+  text-decoration: none;
+}  

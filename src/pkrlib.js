@@ -1,4 +1,3 @@
-"use strict"
 
 /**
  * two through nine, t = ten, j = jack, q = queen, k = king, a = ace
@@ -146,7 +145,7 @@ const tryParseStraight = ({ values, cards }) => {
                     /* a card with value two has index 0 */
                     vLow = 0;
                 }
-                if (vHigh - vLow != 1) {
+                if (vHigh - vLow !== 1) {
                     //not a straight
                     continue straight;
                 }
@@ -326,6 +325,9 @@ const singleRun = (pocketCardArr, communityCards = []) => {
                     //convert to card
                     pc[j] = Card(pc[j]);
                     break;
+                default:
+                    //leave unchanged
+                    break;
             }
         }
     }
@@ -340,6 +342,9 @@ const singleRun = (pocketCardArr, communityCards = []) => {
             case 'string':
                 //convert to card
                 communityCards[i] = Card(communityCards[i]);
+                break;
+            default:
+                //leave unchanged
                 break;
         }
     }
@@ -381,4 +386,4 @@ const simulateGames = (pocketCardArr, communityCards = [], iterations = 10_000, 
     return result;
 }
 
-export { parse, singleRun, simulateGames, Card };
+export { parse, singleRun, simulateGames, Card, suits, suitSymbols };
