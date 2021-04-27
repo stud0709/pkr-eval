@@ -13,6 +13,7 @@ h1 {
 
 .usage td {
   vertical-align: top;
+  font-size: 2vmin;
 }
 
 .usage2 {
@@ -57,7 +58,7 @@ h1 {
 }
 
 .dealer_button_off {
-  visibility: visible !important;
+  visibility: visible;
   width: 1.5vw;
   height: 1.5vw;
   border-radius: 50%;
@@ -108,4 +109,24 @@ h1 {
 
 abbr[title] {
   text-decoration: none;
+}
+
+.help_sign {
+  visibility: visible;
+  width: 1.5vw;
+  height: 1.5vw;
+  border-radius: 50%;
+  border: .2vw dotted white;
+  background-color: lightgray;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1vw;
+  box-shadow: 0vw 0vw .5vw gray;
+  cursor: default;
+}
+
+#td_help_sign {
+  padding-left: 2vmin;
 }
