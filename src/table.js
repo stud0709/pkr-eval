@@ -1,24 +1,52 @@
 import Card from './card.js';
 import Player from './player.js';
 import React from 'react';
-import { cmdClearCC } from './stateManagement.js';
+import { cmdClearCC, unknownHand } from './stateManagement.js';
 import { useToasts } from 'react-toast-notifications';
 
-const Table = ({ tableState, strengthData, actionHandler }) => {
+
+const Table = ({ tableState, actionHandler }) => {
+    const [strengthData, setStrengthData] = React.useState(Array(10));
+    const workerRef = React.useRef(new Worker('./worker.js', { type: 'module' }));
+    const useToastsRef = React.useRef(useToasts());
+
     React.useEffect(() => {
-        console.log(JSON.stringify(tableState));
         if (tableState.error) {
-            addToast(tableState.error, {
+            useToastsRef.current.addToast(tableState.error, {
                 appearance: 'error',
                 autoDismiss: true
             })
         };
         tableState.error = undefined;
 
-        //TODO: calculate strength
-    });
+        //calculate strength
+        let message = { pocketCards: [], communityCards: [], activePlayers: [] };
+        tableState.players.forEach((p, i) => {
+            if (!p.active) return;
 
-    const { addToast } = useToasts();
+            if (p.cards === unknownHand) {
+                message.pocketCards.push([]);
+            } else {
+                message.pocketCards.push(p.cards.map(c => c.toString()));
+            }
+            message.activePlayers.push(i);
+        });
+
+        message.communityCards = tableState.communityCards.map(c => c.toString());
+
+
+        workerRef.current.onmessage = (result) => {
+            const s = Array(10);
+            result.data.strength.forEach((v, i) => {
+                let idx = result.data.activePlayers[i];
+                s[idx] = v;
+            });
+            setStrengthData(s);
+        };
+
+        workerRef.current.postMessage(message);
+    }, [tableState]);
+
 
     const { players, communityCards } = tableState;
 

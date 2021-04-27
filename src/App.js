@@ -15,14 +15,13 @@ function App() {
       ts.players[i] = {
         cards: unknownHand,
         playerName: undefined,
-        active: undefined,
+        active: true,
         dealer: undefined
       };
     }
     return ts;
   }, []);
 
-  const strengthData = React.useRef(Array(10));
   const [tableState, actionPerformed] = React.useReducer(stateReducer, ts);
   const inputRef = React.useRef(null);
 
@@ -35,32 +34,36 @@ function App() {
 
   React.useEffect(() => inputRef.current.focus());
 
+  React.useEffect(() => {
+    const f = e => inputRef.current.focus();
+    window.addEventListener('click', f);
+    return () => window.removeEventListener('click', f);
+  }, []);
+
   return (
     <div className="app">
       <header>
         <h1>Poker Hand Strength Evaluator</h1>
       </header>
-      <table className="main_tbl">
-        <th>Poker Hand Strength Evaluator</th>
+      <table>
         <tbody>
           <tr>
             <td>
               <ToastProvider>
-                <Table tableState={tableState} strengthData={strengthData.current} actionHandler={actionPerformed} />
+                <Table tableState={tableState} actionHandler={actionPerformed} />
               </ToastProvider>
-            </td>
-            <td>
-
             </td>
           </tr>
           <tr>
             <td>
               <table>
-                <tr>
-                  <td>Command:</td>
-                  <td><input type="text" onKeyUp={handleKeyDown} ref={inputRef} focus="true" /></td>
-                  <td id="td_help_sign"><span className="help_sign" data-tip="" data-for="help_sign">?</span></td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td>Command:</td>
+                    <td><input type="text" onKeyUp={handleKeyDown} ref={inputRef} focus="true" /></td>
+                    <td id="td_help_sign"><span className="help_sign" data-tip="" data-for="help_sign">?</span></td>
+                  </tr>
+                </tbody>
               </table>
             </td>
           </tr>

@@ -284,7 +284,7 @@ const parseResult = (hand, ...cards) => {
         vOf += (v * positionWeight[i]);
     }
 
-    const r = hands.indexOf(this.hand);
+    const r = hands.indexOf(hand);
 
     return {
         hand, get rank() { return r }, cards,
@@ -385,5 +385,7 @@ const simulateGames = (pocketCardArr, communityCards = [], iterations = 10_000, 
     result.strength = result.strength.map((v, i) => pocketCardArr[i] && pocketCardArr[i].length ? v / cnt : undefined /* dummy player */);
     return result;
 }
+
+onmessage = e => { console.log(JSON.stringify(e)); }
 
 export { parse, singleRun, simulateGames, Card, suits, suitSymbols };

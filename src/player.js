@@ -7,11 +7,11 @@ const nf = new Intl.NumberFormat(navigator.language, { maximumFractionDigits: 1 
 const Player = ({ orientation, actionHandler, playerNo, players, strengthData }) => {
     const cards = players?.[playerNo]?.cards || unknownHand;
     const playerName = players?.[playerNo]?.playerName || (playerNo ? `Player ${playerNo + 1}` : '( you )');
-    const active = players?.[playerNo]?.active === undefined ? 1 : players[playerNo].active;
+    const active = players[playerNo].active;
     const dealer = players?.[playerNo]?.dealer;
     const fold = players?.[playerNo]?.fold;
     const percent = strengthData[playerNo] && nf.format(strengthData[playerNo] * 100);
-    const odds = strengthData[playerNo] > 0 && strengthData < 1 ? nf.format(Math.min(100, (1 / strengthData[playerNo])) - 1) : undefined;
+    const odds = strengthData[playerNo] > 0 && strengthData[playerNo]  < 1 ? nf.format(Math.min(100, (1 / strengthData[playerNo])) - 1) : undefined;
 
     return (
         <>
