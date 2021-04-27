@@ -17,89 +17,91 @@ const TYPE_CMD = 'cmd',
 
 const stateReducer = (state, action) => {
     console.log(JSON.stringify(action));
-
-    switch (action.type) {
-        case TYPE_CMD:
-            switch (action.params) {
-                case CMD_RESET:
-                    reset(state);
-                    break;
-                default:
-                    if (action.params[0] === CMD_CC) {
-                        if (action.params[1] === CMD_CLEAR_CC) {
-                            if (action.params[2]) {
-                                let idx = action.params[2];
-                                //clear up to this position
-                                clearCC(state, idx - 1);
-                            } else {
-                                //clear all
-                                clearCC(state);
-                            }
-
-                            break;
-                        }
-                        //community card
-                        let idx = 0;
-                        //find first empty card
-                        for (; state.communityCards[idx]; idx++);
-
-                        let command = action.params.substring(1);
-                        while (command.length > 0 && idx < 5) {
-                            let vs = command.substring(0, 2);
-                            command = command.substring(2);
-                            let c = Card(vs);
-                            registerCards(state, c);
-                            state.communityCards[idx] = c;
-                            idx++;
-                        }
-
+    try {
+        switch (action.type) {
+            case TYPE_CMD:
+                switch (action.params) {
+                    case CMD_RESET:
+                        reset(state);
                         break;
-                    }
+                    default:
+                        if (action.params[0] === CMD_CC) {
+                            if (action.params[1] === CMD_CLEAR_CC) {
+                                if (action.params[2]) {
+                                    let idx = action.params[2];
+                                    //clear up to this position
+                                    clearCC(state, idx - 1);
+                                } else {
+                                    //clear all
+                                    clearCC(state);
+                                }
 
-                    let cmdRegex = /(\d0?)(.*)/;
-                    //element. 1 is player number
-                    let playerNo = action.params[0];
-                    let command = action.params[1];
-
-                    if (typeof action.params === 'string') {
-                        let match = cmdRegex.exec(action.params);
-                        playerNo = Number(match[1]);
-                        command = match[2];
-                    }
-
-                    switch (command) {
-                        case CMD_FOLD:
-                        case CMD_UNDO_FOLD:
-                            fold(state, playerNo - 1, command === 'f');
-                            break;
-                        case CMD_DEALER:
-                            dealer(state, playerNo - 1);
-                            break;
-                        case CMD_RESET_SINGLE:
-                            reset(state, playerNo - 1);
-                            break;
-                        case CMD_SIT_OUT:
-                        case CMD_SIT_IN:
-                            setActive(state, playerNo - 1, command === '+');
-                            break;
-                        default:
-                            //check if it is a card assignment
-                            if (/^([23456789tjqka][dchs]){2}/.test(command)) {
-                                setCards(state, playerNo - 1, command);
-                            } else {
-                                throw new Error(`invalid action: ${JSON.stringify(action)}`);
+                                break;
                             }
-                    }
-            }
-            break;
-        case TYPE_GUI:
-            break;
-        default:
-            throw new Error(`invalid action: ${JSON.stringify(action)}`);
+                            //community card
+                            let idx = 0;
+                            //find first empty card
+                            for (; state.communityCards[idx]; idx++);
 
+                            let command = action.params.substring(1);
+                            while (command.length > 0 && idx < 5) {
+                                let vs = command.substring(0, 2);
+                                command = command.substring(2);
+                                let c = Card(vs);
+                                registerCards(state, c);
+                                state.communityCards[idx] = c;
+                                idx++;
+                            }
+
+                            break;
+                        }
+
+                        let cmdRegex = /(\d0?)(.*)/;
+                        //element. 1 is player number
+                        let playerNo = action.params[0];
+                        let command = action.params[1];
+
+                        if (typeof action.params === 'string') {
+                            let match = cmdRegex.exec(action.params);
+                            playerNo = Number(match[1]);
+                            command = match[2];
+                        }
+
+                        switch (command) {
+                            case CMD_FOLD:
+                            case CMD_UNDO_FOLD:
+                                fold(state, playerNo - 1, command === 'f');
+                                break;
+                            case CMD_DEALER:
+                                dealer(state, playerNo - 1);
+                                break;
+                            case CMD_RESET_SINGLE:
+                                reset(state, playerNo - 1);
+                                break;
+                            case CMD_SIT_OUT:
+                            case CMD_SIT_IN:
+                                setActive(state, playerNo - 1, command === '+');
+                                break;
+                            default:
+                                //check if it is a card assignment
+                                if (/^([23456789tjqka][dchs]){2}/.test(command)) {
+                                    setCards(state, playerNo - 1, command);
+                                } else {
+                                    throw new Error(`invalid action: ${JSON.stringify(action)}`);
+                                }
+                        }
+                }
+                break;
+            case TYPE_GUI:
+                break;
+            default:
+                throw new Error(`invalid action: ${JSON.stringify(action)}`);
+
+        }
+    } catch (e) {
+        console.log(e);
+        state.error = `Invalid command: ${action.params}`;
     }
-
-    console.log(JSON.stringify(state));
 
     return Object.assign({}, state);
 };

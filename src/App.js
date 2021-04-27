@@ -4,11 +4,12 @@ import Table from './table.js';
 import React from 'react';
 import { unknownHand, stateReducer, cmdUserEntry } from './stateManagement.js';
 import { suits, suitSymbols } from './pkrlib.js';
+import { ToastProvider } from 'react-toast-notifications';
 
 function App() {
   //table state (will be modified by the reducer)
   const ts = React.useMemo(() => {
-    let ts = { communityCards: [], players: [], deadCards: [] };
+    let ts = { communityCards: [], players: [], deadCards: [], error: undefined };
     for (let i = 0; i < 10; i++) {
       ts.players[i] = {
         cards: unknownHand,
@@ -42,7 +43,9 @@ function App() {
         <tbody>
           <tr>
             <td>
-              <Table tableState={tableState} strengthData={strengthData.current} actionHandler={actionPerformed} />
+              <ToastProvider>
+                <Table tableState={tableState} strengthData={strengthData.current} actionHandler={actionPerformed} />
+              </ToastProvider>
             </td>
             <td>
               <table className="usage"><tbody>

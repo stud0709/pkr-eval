@@ -2,12 +2,23 @@ import Card from './card.js';
 import Player from './player.js';
 import React from 'react';
 import { cmdClearCC } from './stateManagement.js';
+import { useToasts } from 'react-toast-notifications';
 
 const Table = ({ tableState, strengthData, actionHandler }) => {
-    /** Calculate hand strength if table state has changed */
     React.useEffect(() => {
-        //TODO
-    }, [tableState]);
+        console.log(JSON.stringify(tableState));
+        if (tableState.error) {
+            addToast(tableState.error, {
+                appearance: 'error',
+                autoDismiss: true
+            })
+        };
+        tableState.error = undefined;
+
+        //TODO: calculate strength
+    });
+
+    const { addToast } = useToasts();
 
     const { players, communityCards } = tableState;
 
@@ -68,7 +79,7 @@ const Table = ({ tableState, strengthData, actionHandler }) => {
                                                     <abbr
                                                         className={'toolbar_button' + (communityCards?.[i] ? '' : ' hidden')}
                                                         onClick={() => actionHandler(cmdClearCC(i))}
-                                                        >
+                                                    >
                                                         {'\u2716'}
                                                     </abbr>
                                                 </td>
