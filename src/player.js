@@ -53,7 +53,7 @@ const Player = ({ orientation, actionHandler, playerNo, players, strengthData })
                                         <abbr
                                             //fold
                                             className={'toolbar_button' + (cards?.[0]?.readableValue && active ? '' : ' hidden')}
-                                            onClick={() => actionHandler(cmdFold(playerNo))}
+                                            onClick={() => actionHandler(cmdFold(playerNo, !fold))}
                                             title={fold ? 'Undo fold' : 'Fold'} >
                                             {fold ? '\u21ea' : '\u21e9'}
                                         </abbr>

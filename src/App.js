@@ -8,13 +8,13 @@ import { suits, suitSymbols } from './pkrlib.js';
 function App() {
   //table state (will be modified by the reducer)
   const ts = React.useMemo(() => {
-    let ts = { communityCards: [], players: [] };
+    let ts = { communityCards: [], players: [], deadCards: [] };
     for (let i = 0; i < 10; i++) {
       ts.players[i] = {
         cards: unknownHand,
         playerName: undefined,
         active: undefined,
-        dealer: i === 0
+        dealer: undefined
       };
     }
     return ts;
@@ -56,31 +56,40 @@ function App() {
                   <td>Reset:</td><td>xx</td>
                 </tr>
                 <tr>
-                  <td>Player specific commands:</td><td>[No][Command]</td>
+                  <td>Add A{suitSymbols[0]}J{suitSymbols[1]} as comminuty card:</td><td>ca{suits[0]}j{suits[1]}</td>
+                </tr>
+                <tr>
+                  <td>Reset comminuty cards 3...5:</td><td>cx3</td>
+                </tr>
+                <tr>
+                  <td>Reset all comminuty cards:</td><td>cx</td>
                 </tr>
                 <tr>
                   <td>Set cards player 2<br />to&nbsp;A{suitSymbols[0]}5{suitSymbols[2]}:</td><td className="usage2">2a{suits[0]}5{suits[2]}</td>
                 </tr>
                 <tr>
-                  <td>Player 5 fold/undo:</td><td>5f</td>
+                  <td>Player 5 fold:</td><td>5f</td>
                 </tr>
                 <tr>
-                  <td>Player 1 clear hand:</td><td>1x</td>
+                  <td>Player 5 undo fold:</td><td>5F</td>
                 </tr>
                 <tr>
-                  <td>Sit out player 4:</td><td>4-</td>
+                  <td>Player 1 reset hand:</td><td>1x</td>
+                </tr>
+                <tr>
+                  <td>Sit out player 4 (and fold):</td><td>4-</td>
                 </tr>
                 <tr>
                   <td>Sit in player 4:</td><td>4+</td>
                 </tr>
                 <tr>
-                  <td>Player 8 is dealer:</td><td>8d</td>
+                  <td>Player 10 is dealer<br />(starting new game):</td><td className="usage2">10d</td>
                 </tr>
               </tbody></table>
             </td>
           </tr>
           <tr>
-            <td>Command:&nbsp;<input type="text" onKeyUp={handleKeyDown} ref={inputRef} /></td>
+            <td>Command:&nbsp;<input type="text" onKeyUp={handleKeyDown} ref={inputRef} focus="true" /></td>
           </tr>
         </tbody>
       </table>

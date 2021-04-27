@@ -11,13 +11,13 @@ h1 {
   width: 100%;
 }*/
 
-.usage td{
+.usage td {
   vertical-align: top;
-} 
+}
 
-.usage2{
+.usage2 {
   vertical-align: bottom !important;
-} 
+}
 
 .card_suit_top {
   font-size: 2vmin;
@@ -46,6 +46,10 @@ h1 {
 
 .fold {
   opacity: 33%;
+}
+
+.red_suit {
+  color: red;
 }
 
 .hidden {
@@ -89,19 +93,19 @@ h1 {
   cursor: default;
 }
 
-.dealer_button_off:hover{
+.dealer_button_off:hover {
   opacity: 50%;
-} 
+}
 
 .toolbar_button:hover {
   text-shadow: 0vw 0vw .5vw black;
   cursor: default;
 }
 
-.toolbar_button, .toolbar_button:hover{
+.toolbar_button, .toolbar_button:hover {
   font-size: 3vmin;
-} 
+}
 
-abbr[title]{
+abbr[title] {
   text-decoration: none;
-}  
+}
