@@ -1,7 +1,7 @@
-import Card from './card.js';
-import Player from './player.js';
+import Card from './Card.js';
+import Player from './Player.js';
 import React from 'react';
-import { cmdClearCC, unknownHand } from './stateManagement.js';
+import { cmdClearCC } from './stateManagement.js';
 import { useToasts } from 'react-toast-notifications';
 
 
@@ -24,16 +24,15 @@ const Table = ({ tableState, actionHandler }) => {
         tableState.players.forEach((p, i) => {
             if (!p.active) return;
 
-            if (p.cards === unknownHand) {
-                message.pocketCards.push([]);
+            if (p.cards?.[0]?.value) {
+                message.pocketCards.push(p.cards.map(c => `${c.value}${c.suit}`));
             } else {
-                message.pocketCards.push(p.cards.map(c => c.toString()));
+                message.pocketCards.push([]);
             }
             message.activePlayers.push(i);
         });
 
-        message.communityCards = tableState.communityCards.map(c => c.toString());
-
+        message.communityCards = tableState.communityCards.map(c => `${c.value}${c.suit}`);
 
         workerRef.current.onmessage = (result) => {
             const s = Array(10);

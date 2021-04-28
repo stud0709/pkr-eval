@@ -16,7 +16,8 @@ const TYPE_CMD = 'cmd',
     ;
 
 const stateReducer = (state, action) => {
-    console.log(JSON.stringify(action));
+    const stateCopy = JSON.parse(JSON.stringify(state));
+//    console.log(JSON.stringify(action));
     try {
         switch (action.type) {
             case TYPE_CMD:
@@ -87,7 +88,7 @@ const stateReducer = (state, action) => {
                                 if (/^([23456789tjqka][dchs]){2}/.test(command)) {
                                     setCards(state, playerNo - 1, command);
                                 } else {
-                                    throw new Error(`invalid action: ${JSON.stringify(action)}`);
+                                    throw new Error(`Malformed card assignment`);
                                 }
                         }
                 }
@@ -99,8 +100,9 @@ const stateReducer = (state, action) => {
 
         }
     } catch (e) {
-        console.log(e);
-        state.error = `Invalid command: ${action.params}`;
+        console.log(e.message);
+        stateCopy.error = `Invalid command: ${action.params} (${e.message})`;
+        return stateCopy;
     }
 
     return Object.assign({}, state);
@@ -115,13 +117,13 @@ const cmdClearCC = (position) => { return { type: TYPE_CMD, params: [CMD_CC, CMD
 
 const reset = (state, playerNo) => {
     state.players.forEach((p, i) => {
-        if (playerNo && playerNo !== i) return;
+        if (playerNo !== undefined && playerNo !== i) return;
         unregisterCards(state, ...p.cards);
         p.cards = unknownHand;
         fold(state, i, false);
     });
 
-    if (!playerNo) {
+    if (playerNo === undefined) {
         //reset all
         unregisterCards(state, ...state.communityCards);
         state.communityCards = [];
@@ -162,8 +164,9 @@ const registerCards = ({ deadCards }, ...cArr) => {
     for (let c of cArr) {
         //duplicate card?
         for (let dc of deadCards) {
-            if (dc && c.compareTo(dc) === 0)
+            if (dc && dc.value === c.value && dc.suit === c.suit) {
                 throw new Error(`Duplicate card: ${c}`);
+            }
         }
 
         deadCards.push(c);
@@ -173,7 +176,7 @@ const registerCards = ({ deadCards }, ...cArr) => {
 const unregisterCards = ({ deadCards }, ...cArr) => {
     for (let c of cArr) {
         for (let i = 0; i < deadCards.length; i++) {
-            if (deadCards[i] && deadCards[i].compareTo(c) === 0) {
+            if (deadCards[i] && deadCards[i].suit === c.suit && deadCards.value === c.value) {
                 delete deadCards[i];
                 break;
             }
@@ -186,4 +189,17 @@ const clearCC = (state, pos = 0) => {
     state.communityCards = state.communityCards.slice(0, pos);
 };
 
-export { unknownHand, stateReducer, cmdActive, cmdResetSingle, cmdFold, cmdDealer, cmdUserEntry, cmdClearCC };
+const emptyTableState = () => {
+    let ts = { communityCards: [], players: [], deadCards: [], error: undefined };
+    for (let i = 0; i < 10; i++) {
+        ts.players[i] = {
+            cards: unknownHand,
+            playerName: undefined,
+            active: true,
+            dealer: undefined
+        };
+    }
+    return ts;
+};
+
+export { unknownHand, stateReducer, cmdActive, cmdResetSingle, cmdFold, cmdDealer, cmdUserEntry, cmdClearCC, emptyTableState };

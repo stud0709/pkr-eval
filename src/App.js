@@ -1,28 +1,15 @@
 
 import './App.css';
-import Table from './table.js';
+import Table from './Table.js';
 import React from 'react';
-import { unknownHand, stateReducer, cmdUserEntry } from './stateManagement.js';
+import { stateReducer, cmdUserEntry, emptyTableState } from './stateManagement.js';
 import { suits, suitSymbols } from './pkrlib.js';
 import { ToastProvider } from 'react-toast-notifications';
 import ReactTooltip from 'react-tooltip';
 
 function App() {
   //table state (will be modified by the reducer)
-  const ts = React.useMemo(() => {
-    let ts = { communityCards: [], players: [], deadCards: [], error: undefined };
-    for (let i = 0; i < 10; i++) {
-      ts.players[i] = {
-        cards: unknownHand,
-        playerName: undefined,
-        active: true,
-        dealer: undefined
-      };
-    }
-    return ts;
-  }, []);
-
-  const [tableState, actionPerformed] = React.useReducer(stateReducer, ts);
+  const [tableState, actionPerformed] = React.useReducer(stateReducer, emptyTableState());
   const inputRef = React.useRef(null);
 
   const handleKeyDown = (e) => {

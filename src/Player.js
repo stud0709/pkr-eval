@@ -1,4 +1,4 @@
-import Hand from './hand.js';
+import Hand from './Hand.js';
 import { cmdActive, cmdResetSingle, cmdFold, cmdDealer } from './stateManagement.js';
 import { unknownHand } from './stateManagement.js';
 
